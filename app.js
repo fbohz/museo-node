@@ -12,8 +12,9 @@ const usersBaseUrl = '/api/v1/users';
 
 // Data from body is added to the object (req.body)
 app.use(morgan('dev'));
-
 app.use(express.json());
+//serve static files.
+app.use(express.static(`${__dirname}/public`))
 
 app.use((req, res, next) => {
   console.log('hi from middleware');
