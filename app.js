@@ -1,9 +1,23 @@
 const fs = require('fs');
 const express = require('express');
 const app = express();
+const morgan = require('morgan')
 
-// middleware to modify express data. Data from body is added to the object (req.body)
+// MIDDLEWARES
+
+// Data from body is added to the object (req.body)
 app.use(express.json());
+
+app.use((req, res, next) => {
+  console.log('hi from middleware')
+  next()
+})
+
+app.use((req, res, next) => {
+  // current time of request e.g.
+  req.requestTime = new Date().toISOString();
+  next();
+});
 
 // top level code is only executed once
 const tours = JSON.parse(
@@ -16,6 +30,7 @@ const getAllTours = (req, res) => {
   // here we cannot have blocking code
   res.status(200).json({
     status: 'success',
+    requestedAt: req.requestTime,
     results: tours.length,
     data: {
       tours,
@@ -46,8 +61,7 @@ const getTour = (req, res) => {
 const createTour = (req, res) => {
   // since at this point no id b/c of no db we need to specify that
   const newId = tours[tours.length - 1].id + 1;
-  const newTour = Object.assign(
-    {
+  const newTour = Object.assign({
       id: newId,
     },
     req.body
@@ -98,12 +112,22 @@ const deleteTour = (req, res) => {
   });
 };
 
-app.get(baseUrlTours, getAllTours);
-app.get(`${baseUrlTours}/:id`, getTour);
-app.post(baseUrlTours, createTour);
-app.patch(`${baseUrlTours}/:id`, updateTour);
-app.delete(`${baseUrlTours}/:id`, deleteTour);
+// app.get(baseUrlTours, getAllTours);
+// app.post(baseUrlTours, createTour);
+// app.get(`${baseUrlTours}/:id`, getTour);
+// app.patch(`${baseUrlTours}/:id`, updateTour);
+// app.delete(`${baseUrlTours}/:id`, deleteTour);
 
+app
+  .route(baseUrlTours)
+  .get(getAllTours)
+  .post(createTour)
+
+app
+  .route(`${baseUrlTours}/:id`)
+  .get(getTour)
+  .patch(updateTour)
+  .delete(deleteTour)
 // starting server
 const port = 4000;
 
