@@ -9,11 +9,10 @@ const baseUrlTours = '/api/v1/tours';
 const usersBaseUrl = '/api/v1/users';
 
 // MIDDLEWARES
-
+if (process.env.NODE_ENV === 'development') app.use(morgan('dev'));
 // Data from body is added to the object (req.body)
-app.use(morgan('dev'));
 app.use(express.json());
-//serve static files.
+//serve static files from public folder access as e.g. /overview.html.
 app.use(express.static(`${__dirname}/public`))
 
 app.use((req, res, next) => {
