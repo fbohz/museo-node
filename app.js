@@ -153,22 +153,19 @@ const deleteUser = (req, res) => {
 };
 
 // ROUTE
+const tourRouter = express.Router();
+const userRouter = express.Router();
 
-app.route(baseUrlTours).get(getAllTours).post(createTour);
+tourRouter.route('/').get(getAllTours).post(createTour);
 
-app
-  .route(`${baseUrlTours}/:id`)
-  .get(getTour)
-  .patch(updateTour)
-  .delete(deleteTour);
+tourRouter.route('/:id').get(getTour).patch(updateTour).delete(deleteTour);
 
-app.route(usersBaseUrl).get(getAllUsers).post(createUser);
+userRouter.route('/').get(getAllUsers).post(createUser);
 
-app
-  .route(`${usersBaseUrl}/:id`)
-  .get(getUser)
-  .patch(updateUser)
-  .delete(deleteUser);
+userRouter.route('/:id').get(getUser).patch(updateUser).delete(deleteUser);
+
+app.use(baseUrlTours, tourRouter);
+app.use(usersBaseUrl, userRouter);
 
 // starting server
 const port = 4000;
