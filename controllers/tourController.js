@@ -3,6 +3,19 @@ const fs = require('fs');
 const tours = JSON.parse(
     fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`)
 );
+
+// check for specific param and do something
+exports.checkId = (req, res, next, value) => {
+    console.log("id is ", value)
+    if (req.params.id * 1 > tours.length)
+        return res.status(404).json({
+            status: 'fail',
+            message: 'Invalid ID',
+        });
+    // remember to call next() on middlewares
+    next()
+}
+
 // Route handlers
 
 exports.getAllTours = (req, res) => {
@@ -23,11 +36,11 @@ exports.getTour = (req, res) => {
     const tour = tours.find((el) => el.id === id);
 
     // no tour handling
-    if (!tour)
-        return res.status(404).json({
-            status: 'fail',
-            message: 'Invalid ID',
-        });
+    // if (!tour)
+    //     return res.status(404).json({
+    //         status: 'fail',
+    //         message: 'Invalid ID',
+    //     });
 
     res.status(200).json({
         status: 'success',
@@ -62,13 +75,6 @@ exports.createTour = (req, res) => {
 };
 
 exports.updateTour = (req, res) => {
-    // patch implemented for testing purposes
-    if (req.params.id * 1 > tours.length)
-        return res.status(404).json({
-            status: 'fail',
-            message: 'Invalid ID',
-        });
-
     res.status(200).json({
         status: 'success',
         data: {
@@ -78,12 +84,6 @@ exports.updateTour = (req, res) => {
 };
 
 exports.deleteTour = (req, res) => {
-    // patch implemented for testing purposes
-    if (req.params.id * 1 > tours.length)
-        return res.status(404).json({
-            status: 'fail',
-            message: 'Invalid ID',
-        });
     // 204 no content response but OK
     res.status(204).json({
         status: 'success',

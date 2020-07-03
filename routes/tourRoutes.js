@@ -1,16 +1,20 @@
 const express = require('express');
 const fs = require('fs');
 const router = express.Router();
+
+// check for specific param and do something
+
 // top level code is only executed once
 const {
     getAllTours,
     createTour,
     getTour,
     updateTour,
-    deleteTour
+    deleteTour,
+    checkId
 } = require('../controllers/tourController')
 
-
+router.param('id', checkId)
 
 // ROUTER
 router.route('/').get(getAllTours).post(createTour);
