@@ -1,8 +1,10 @@
-const dotenv = require('dotenv')
+const dotenv = require('dotenv');
 // read config.env file and save as env variables
-dotenv.config({path: './config.env'})
+dotenv.config({
+  path: './config.env',
+});
 
-const app = require('./app')
+const app = require('./app');
 
 // console.log(process.env)
 
