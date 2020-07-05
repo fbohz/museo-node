@@ -1,5 +1,4 @@
 const express = require('express');
-const fs = require('fs');
 const router = express.Router();
 
 // check for specific param and do something
@@ -15,7 +14,7 @@ const {
     checkBody
 } = require('../controllers/tourController')
 
-router.param('id', checkId)
+// router.param('id', checkId)
 
 // ROUTER
 router.route('/')
