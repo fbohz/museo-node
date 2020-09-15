@@ -10,7 +10,18 @@ exports.getAllTours = async (req, res) => {
   // here we cannot have blocking code
 
   try {
-    const tours = await Tour.find();
+    // BUILD QUERY
+    const queryObj = {
+      ...req.query
+    }
+    const excludedFields = ['page', 'sort', 'limit', 'fields']
+    excludedFields.forEach(el => delete queryObj[el])
+
+    const query = Tour.find();
+
+    // EXECUTE QUERY
+    const tours = await query;
+    // SEND RESPONSE
     res.status(200).json({
       status: 'success',
       results: tours.length,
@@ -93,8 +104,8 @@ exports.deleteTour = async (req, res) => {
     });
   } catch (error) {
     res.status(404).json({
-        status: 'fail',
-        message: error,
-      });
+      status: 'fail',
+      message: error,
+    });
   }
 };
